@@ -15,3 +15,5 @@ src/*.dll
 # OS
 .DS_Store
 Thumbs.db
+/doc/
+/Meta/

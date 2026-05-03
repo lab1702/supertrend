@@ -1,0 +1,92 @@
+---
+title: "Using the supertrend Package"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using the supertrend Package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment  = "#>",
+  fig.width  = 7,
+  fig.height = 4
+)
+```
+
+## Overview
+
+`supertrend` adds the SuperTrend technical indicator and its trading
+signals to the `quantmod` workflow. The calculation matches what users
+see on TradingView: ATR-based bands with a configurable multiplier,
+trailing in the direction of the trend until price closes through them.
+
+## Computing the indicator
+
+```{r}
+library(supertrend)
+data(spy_sample)
+
+st <- SuperTrend(spy_sample, n = 10, multiplier = 3)
+head(st, 15)
+```
+
+The output xts has four columns:
+
+- `supertrend` — the indicator line
+- `trend` — `+1` (uptrend) or `-1` (downtrend)
+- `upper_band`, `lower_band` — the trailing bands
+
+## Plotting
+
+```{r}
+chartSuperTrend(spy_sample, theme = "white",
+                n = 10, multiplier = 3)
+```
+
+The line is green during uptrends and red during downtrends. To layer it
+onto an existing chart instead, use `addSuperTrend()`:
+
+```{r}
+quantmod::chartSeries(spy_sample, theme = "white", name = "SPY (synthetic)")
+addSuperTrend(n = 10, multiplier = 3)
+```
+
+## Extracting trading signals
+
+```{r}
+sig <- supertrend_signals(st)
+sig[rowSums(sig) > 0, ]
+```
+
+`long_entry`, `short_entry`, `long_exit`, and `short_exit` are 0/1 flags
+on flip bars. By construction, `long_entry == short_exit` and
+`short_entry == long_exit` — they are exposed separately so they can be
+fed to backtesting frameworks (such as `quantstrat`) as independent
+rules.
+
+## A trivial signal-following backtest sketch
+
+```{r}
+position <- cumsum(as.numeric(sig$long_entry) - as.numeric(sig$short_entry))
+position <- ifelse(position > 0, 1, ifelse(position < 0, -1, 0))
+returns  <- diff(log(as.numeric(spy_sample$Close)))
+strategy_returns <- head(position, -1) * tail(returns, -1)
+sum(strategy_returns, na.rm = TRUE)
+```
+
+This is a sketch — production backtesting needs entry/exit timing
+assumptions, slippage, and position sizing. See `quantstrat` or
+`PerformanceAnalytics`.
+
+## Tuning ATR smoothing
+
+The default ATR smoothing is Wilder's (matches TradingView). For SMA or
+plain EMA smoothing:
+
+```{r}
+SuperTrend(spy_sample, atr_method = "sma")  |> head(15)
+SuperTrend(spy_sample, atr_method = "ema")  |> head(15)
+```
