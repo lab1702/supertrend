@@ -76,3 +76,39 @@ test_that("SuperTrend matches frozen reference values on the mixed fixture", {
   expect_equal(as.numeric(out$trend[20]),  1)
   expect_equal(as.numeric(out$trend[30]), -1)
 })
+
+test_that("SuperTrend rejects non-xts input", {
+  expect_error(
+    SuperTrend(data.frame(High = 1, Low = 1, Close = 1)),
+    "HLC must be an xts object"
+  )
+})
+
+test_that("SuperTrend rejects xts without HLC columns", {
+  bad <- xts::xts(matrix(1:4, ncol = 2,
+                         dimnames = list(NULL, c("Foo", "Bar"))),
+                  order.by = as.Date("2025-01-01") + 0:1)
+  expect_error(
+    SuperTrend(bad),
+    "HLC must contain High, Low, and Close columns"
+  )
+})
+
+test_that("SuperTrend rejects invalid n", {
+  hlc <- make_mixed_hlc()
+  expect_error(SuperTrend(hlc, n = 0),    "n must be a positive integer")
+  expect_error(SuperTrend(hlc, n = -1),   "n must be a positive integer")
+  expect_error(SuperTrend(hlc, n = 1.5),  "n must be a positive integer")
+  expect_error(SuperTrend(hlc, n = "10"), "n must be a positive integer")
+})
+
+test_that("SuperTrend rejects non-positive multiplier", {
+  hlc <- make_mixed_hlc()
+  expect_error(SuperTrend(hlc, multiplier = 0),  "multiplier must be positive")
+  expect_error(SuperTrend(hlc, multiplier = -1), "multiplier must be positive")
+})
+
+test_that("SuperTrend rejects unknown atr_method via match.arg", {
+  hlc <- make_mixed_hlc()
+  expect_error(SuperTrend(hlc, atr_method = "bogus"))
+})
