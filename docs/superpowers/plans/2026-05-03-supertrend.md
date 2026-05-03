@@ -56,8 +56,8 @@ Package: supertrend
 Type: Package
 Title: SuperTrend Indicator and Signals for 'quantmod'
 Version: 0.1.0
-Authors@R: person(given = "Package", family = "Author",
-                  email = "you@example.com",
+Authors@R: person(given = "Lars", family = "Bernhardsson",
+                  email = "cran.sherry228@passinbox.com",
                   role = c("aut", "cre"))
 Description: Computes the SuperTrend technical indicator (Olivier Seban,
     based on Average True Range) and extracts long/short entry and exit
@@ -92,7 +92,7 @@ Also create the LICENSE file required by `MIT + file LICENSE`:
 `LICENSE`:
 ```
 YEAR: 2026
-COPYRIGHT HOLDER: Package Author
+COPYRIGHT HOLDER: Lars Bernhardsson
 ```
 
 - [ ] **Step 2: Write .Rbuildignore**
