@@ -1,0 +1,9 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^data-raw$
+^docs$
+^README\.Rmd$
+^\.github$
+^\.gitignore$
+^doc$
+^Meta$

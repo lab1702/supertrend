@@ -1,0 +1,31 @@
+Package: supertrend
+Type: Package
+Title: ATR-Based Trailing-Stop Trend Indicator for 'quantmod'
+Version: 0.1.0
+Authors@R: person(given = "Lars", family = "Bernhardsson",
+                  email = "cran.sherry228@passinbox.com",
+                  role = c("aut", "cre"))
+Description: Computes the SuperTrend technical indicator (Olivier Seban,
+    based on Average True Range) and extracts long/short entry and exit
+    signals from trend flips. Provides a 'quantmod'-idiomatic chart
+    overlay so the indicator can be added to existing 'chartSeries' plots
+    in the same way as 'addBBands' or 'addMACD'. The SuperTrend
+    calculation matches the conventions used by major charting platforms
+    such as TradingView.
+License: MIT + file LICENSE
+Depends:
+    R (>= 3.6.0)
+Imports:
+    xts,
+    zoo,
+    TTR,
+    quantmod (>= 0.4.0)
+Suggests:
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
+Encoding: UTF-8
+LazyData: true
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0
