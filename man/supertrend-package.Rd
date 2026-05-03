@@ -10,14 +10,6 @@ Computes the SuperTrend technical indicator and extracts trading
 signals from trend flips. Provides a 'quantmod'-idiomatic chart
 overlay.
 }
-\seealso{
-Useful links:
-\itemize{
-  \item \url{https://github.com/your-account/supertrend}
-  \item Report bugs at \url{https://github.com/your-account/supertrend/issues}
-}
-
-}
 \author{
 \strong{Maintainer}: Lars Bernhardsson \email{cran.sherry228@passinbox.com}
 

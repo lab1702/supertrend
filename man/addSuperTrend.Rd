@@ -8,7 +8,7 @@ addSuperTrend(
   n = 10,
   multiplier = 3,
   atr_method = c("wilder", "sma", "ema"),
-  col = c("#26a69a", "#ef5350"),
+  col = "#1976d2",
   lwd = 2,
   on = 1
 )
@@ -17,9 +17,7 @@ addSuperTrend(
 \item{n, multiplier, atr_method}{Passed through to
 \code{\link{SuperTrend}}.}
 
-\item{col}{Length-2 character vector of colors:
-\code{c(uptrend, downtrend)}. Defaults to TradingView's
-green/red.}
+\item{col}{Line color. Defaults to a medium blue.}
 
 \item{lwd}{Line width.}
 
@@ -37,9 +35,8 @@ Adds a SuperTrend line to the price panel of the currently active
 has been drawn, draws on the price panel by default.
 }
 \details{
-The line is drawn in two segments -- uptrend bars in \code{col[1]}
-and downtrend bars in \code{col[2]} -- connected by \code{NA} gaps
-so colors do not bleed across flip bars.
+The line is drawn with \code{NA} gaps at trend-flip bars so the
+visual breaks indicate where signals occur.
 }
 \examples{
 \dontrun{

@@ -5,15 +5,12 @@
 #' \code{\link[quantmod]{addBBands}}: must be called after the chart
 #' has been drawn, draws on the price panel by default.
 #'
-#' The line is drawn in two segments -- uptrend bars in \code{col[1]}
-#' and downtrend bars in \code{col[2]} -- connected by \code{NA} gaps
-#' so colors do not bleed across flip bars.
+#' The line is drawn with \code{NA} gaps at trend-flip bars so the
+#' visual breaks indicate where signals occur.
 #'
 #' @param n,multiplier,atr_method Passed through to
 #'   \code{\link{SuperTrend}}.
-#' @param col Length-2 character vector of colors:
-#'   \code{c(uptrend, downtrend)}. Defaults to TradingView's
-#'   green/red.
+#' @param col Line color. Defaults to a medium blue.
 #' @param lwd Line width.
 #' @param on Chart panel to draw on. \code{1} = price panel (the
 #'   default and the only sensible choice for SuperTrend).
@@ -31,11 +28,11 @@
 #' @export
 addSuperTrend <- function(n = 10, multiplier = 3,
                           atr_method = c("wilder", "sma", "ema"),
-                          col = c("#26a69a", "#ef5350"),
+                          col = "#1976d2",
                           lwd = 2, on = 1) {
   atr_method <- match.arg(atr_method)
-  if (!is.character(col) || length(col) != 2L) {
-    stop("col must be a length-2 character vector: c(uptrend, downtrend)")
+  if (!is.character(col) || length(col) != 1L) {
+    stop("col must be a single color string")
   }
 
   get_chob <- utils::getFromNamespace("get.current.chob", "quantmod")
@@ -48,14 +45,14 @@ addSuperTrend <- function(n = 10, multiplier = 3,
   st <- SuperTrend(x, n = n, multiplier = multiplier,
                    atr_method = atr_method)
 
-  st_up <- st[, "supertrend"]
-  st_up[as.numeric(st[, "trend"]) != 1] <- NA
-  colnames(st_up) <- "SuperTrend.up"
+  # Insert NA at trend-flip bars so the line breaks visibly at signals.
+  trend <- as.numeric(st[, "trend"])
+  flips <- c(FALSE, diff(trend) != 0)
+  flips[is.na(flips)] <- FALSE
+  st_line <- st[, "supertrend"]
+  st_line[flips] <- NA
+  colnames(st_line) <- "SuperTrend"
 
-  st_dn <- st[, "supertrend"]
-  st_dn[as.numeric(st[, "trend"]) != -1] <- NA
-  colnames(st_dn) <- "SuperTrend.dn"
-
-  quantmod::addTA(st_up, on = on, type = "l", col = col[1], lwd = lwd)
-  invisible(quantmod::addTA(st_dn, on = on, type = "l", col = col[2], lwd = lwd))
+  invisible(quantmod::addTA(st_line, on = on, type = "l",
+                            col = col, lwd = lwd))
 }

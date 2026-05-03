@@ -11,7 +11,7 @@ chartSuperTrend(
   n = 10,
   multiplier = 3,
   atr_method = c("wilder", "sma", "ema"),
-  col = c("#26a69a", "#ef5350")
+  col = "#1976d2"
 )
 }
 \arguments{

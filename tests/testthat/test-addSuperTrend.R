@@ -16,7 +16,7 @@ test_that("addSuperTrend errors when no chart is active", {
   expect_error(addSuperTrend())
 })
 
-test_that("addSuperTrend accepts custom colors and lwd", {
+test_that("addSuperTrend accepts a custom color and lwd", {
   skip_on_cran()
 
   pdf(file = NULL)
@@ -24,6 +24,18 @@ test_that("addSuperTrend accepts custom colors and lwd", {
 
   data(spy_sample, package = "supertrend")
   expect_no_error(
-    chartSuperTrend(spy_sample, col = c("blue", "orange"))
+    chartSuperTrend(spy_sample, col = "blue")
   )
+})
+
+test_that("addSuperTrend rejects multi-element col vector", {
+  skip_on_cran()
+
+  pdf(file = NULL)
+  on.exit(dev.off(), add = TRUE)
+
+  data(spy_sample, package = "supertrend")
+  quantmod::chartSeries(spy_sample, theme = "white")
+  expect_error(addSuperTrend(col = c("red", "blue")),
+               "col must be a single color string")
 })

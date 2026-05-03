@@ -23,7 +23,7 @@
 chartSuperTrend <- function(x, ..., name = deparse(substitute(x)),
                             n = 10, multiplier = 3,
                             atr_method = c("wilder", "sma", "ema"),
-                            col = c("#26a69a", "#ef5350")) {
+                            col = "#1976d2") {
   atr_method <- match.arg(atr_method)
   quantmod::chartSeries(x, name = name, ...)
   addSuperTrend(n = n, multiplier = multiplier,
