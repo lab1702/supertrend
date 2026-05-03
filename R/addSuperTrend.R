@@ -56,6 +56,6 @@ addSuperTrend <- function(n = 10, multiplier = 3,
   st_dn[as.numeric(st[, "trend"]) != -1] <- NA
   colnames(st_dn) <- "SuperTrend.dn"
 
-  quantmod::addTA(st_up, on = on, col = col[1], lwd = lwd)
-  invisible(quantmod::addTA(st_dn, on = on, col = col[2], lwd = lwd))
+  quantmod::addTA(st_up, on = on, type = "l", col = col[1], lwd = lwd)
+  invisible(quantmod::addTA(st_dn, on = on, type = "l", col = col[2], lwd = lwd))
 }
