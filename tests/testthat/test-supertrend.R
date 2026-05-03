@@ -112,3 +112,27 @@ test_that("SuperTrend rejects unknown atr_method via match.arg", {
   hlc <- make_mixed_hlc()
   expect_error(SuperTrend(hlc, atr_method = "bogus"))
 })
+
+test_that("SuperTrend produces different results for each atr_method", {
+  hlc <- make_mixed_hlc()
+  out_w <- SuperTrend(hlc, atr_method = "wilder")
+  out_s <- SuperTrend(hlc, atr_method = "sma")
+  out_e <- SuperTrend(hlc, atr_method = "ema")
+
+  # Compare a row past warm-up where ATR differences propagate.
+  i <- 23
+  expect_false(isTRUE(all.equal(as.numeric(out_w$supertrend[i]),
+                                as.numeric(out_s$supertrend[i]))))
+  expect_false(isTRUE(all.equal(as.numeric(out_w$supertrend[i]),
+                                as.numeric(out_e$supertrend[i]))))
+  expect_false(isTRUE(all.equal(as.numeric(out_s$supertrend[i]),
+                                as.numeric(out_e$supertrend[i]))))
+})
+
+test_that("SuperTrend default atr_method is wilder", {
+  hlc <- make_mixed_hlc()
+  expect_equal(
+    as.numeric(SuperTrend(hlc)$supertrend),
+    as.numeric(SuperTrend(hlc, atr_method = "wilder")$supertrend)
+  )
+})
