@@ -39,3 +39,26 @@ test_that("addSuperTrend rejects multi-element col vector", {
   expect_error(addSuperTrend(col = c("red", "blue")),
                "col must be a single color string")
 })
+
+test_that("addSuperTrend rejects invalid lwd", {
+  skip_on_cran()
+  pdf(file = NULL)
+  on.exit(dev.off(), add = TRUE)
+  data(spy_sample, package = "supertrend")
+  quantmod::chartSeries(spy_sample, theme = "white")
+  expect_error(addSuperTrend(lwd = "two"),  "lwd must be a positive number")
+  expect_error(addSuperTrend(lwd = 0),      "lwd must be a positive number")
+  expect_error(addSuperTrend(lwd = -1),     "lwd must be a positive number")
+})
+
+test_that("addSuperTrend rejects invalid on", {
+  skip_on_cran()
+  pdf(file = NULL)
+  on.exit(dev.off(), add = TRUE)
+  data(spy_sample, package = "supertrend")
+  quantmod::chartSeries(spy_sample, theme = "white")
+  expect_error(addSuperTrend(on = 0),    "on must be a positive integer panel index")
+  expect_error(addSuperTrend(on = -1),   "on must be a positive integer panel index")
+  expect_error(addSuperTrend(on = 1.5),  "on must be a positive integer panel index")
+  expect_error(addSuperTrend(on = "1"),  "on must be a positive integer panel index")
+})

@@ -136,3 +136,13 @@ test_that("SuperTrend default atr_method is wilder", {
     as.numeric(SuperTrend(hlc, atr_method = "wilder")$supertrend)
   )
 })
+
+test_that("SuperTrend errors when nrow(HLC) <= n with a clear message", {
+  hlc <- make_mixed_hlc()
+  short <- hlc[1:5, ]
+  expect_error(SuperTrend(short, n = 10),
+               "nrow\\(HLC\\) must be greater than n")
+  # Boundary case: equal also rejected
+  expect_error(SuperTrend(hlc[1:10, ], n = 10),
+               "nrow\\(HLC\\) must be greater than n")
+})

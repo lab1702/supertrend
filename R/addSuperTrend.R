@@ -34,6 +34,13 @@ addSuperTrend <- function(n = 10, multiplier = 3,
   if (!is.character(col) || length(col) != 1L) {
     stop("col must be a single color string")
   }
+  if (!is.numeric(lwd) || length(lwd) != 1L || !is.finite(lwd) || lwd <= 0) {
+    stop("lwd must be a positive number")
+  }
+  if (!is.numeric(on) || length(on) != 1L || !is.finite(on) ||
+      on != as.integer(on) || on < 1) {
+    stop("on must be a positive integer panel index")
+  }
 
   get_chob <- utils::getFromNamespace("get.current.chob", "quantmod")
   lchob <- get_chob()
@@ -51,6 +58,11 @@ addSuperTrend <- function(n = 10, multiplier = 3,
   st_line <- st[, "supertrend"]
   st_line[flips] <- NA
   colnames(st_line) <- "SuperTrend"
+
+  # Single-color line in v0.1.0; bicolor by trend (green/red) deferred
+  # to v0.2.0 because consecutive quantmod::addTA calls from inside one
+  # function frame don't accumulate — only the last TA persists in the
+  # chob, defeating the bicolor approach.
 
   # quantmod::addTA uses NSE: it captures the call expression and
   # re-evaluates the data symbol at draw time. From a package namespace

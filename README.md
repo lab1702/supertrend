@@ -47,6 +47,11 @@ sig[rowSums(sig) > 0, ]
 
 See `vignette("supertrend")` for a full walkthrough.
 
+## Roadmap
+
+- v0.2.0: bicolor SuperTrend overlay (green during uptrends, red during downtrends).
+- v0.2.0: ggplot2-based visualization function for non-quantmod workflows.
+
 ## License
 
 MIT

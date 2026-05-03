@@ -50,6 +50,9 @@ SuperTrend <- function(HLC, n = 10, multiplier = 3,
       is.na(multiplier) || multiplier <= 0) {
     stop("multiplier must be positive")
   }
+  if (nrow(HLC) <= n) {
+    stop("nrow(HLC) must be greater than n (the ATR period)")
+  }
 
   hi <- as.numeric(quantmod::Hi(HLC))
   lo <- as.numeric(quantmod::Lo(HLC))
@@ -74,14 +77,6 @@ SuperTrend <- function(HLC, n = 10, multiplier = 3,
   st          <- rep(NA_real_, N)
 
   start <- which(!is.na(atr))[1]
-  if (is.na(start)) {
-    out <- xts::xts(cbind(supertrend = st, trend = trend,
-                          upper_band = upper_final,
-                          lower_band = lower_final),
-                    order.by = zoo::index(HLC))
-    return(out)
-  }
-
   upper_final[start] <- upper_basic[start]
   lower_final[start] <- lower_basic[start]
   trend[start]       <- 1L

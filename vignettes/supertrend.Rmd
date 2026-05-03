@@ -46,8 +46,10 @@ chartSuperTrend(spy_sample, theme = "white",
                 n = 10, multiplier = 3)
 ```
 
-The line is green during uptrends and red during downtrends. To layer it
-onto an existing chart instead, use `addSuperTrend()`:
+The SuperTrend line is drawn in a single color (default blue) with
+breaks at trend-flip bars; bicolor by trend direction is a planned
+v0.2.0 enhancement. To layer it onto an existing chart instead, use
+`addSuperTrend()`:
 
 ```{r}
 quantmod::chartSeries(spy_sample, theme = "white", name = "SPY (synthetic)")
