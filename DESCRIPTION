@@ -1,6 +1,6 @@
 Package: supertrend
 Type: Package
-Title: SuperTrend Indicator and Signals for 'quantmod'
+Title: ATR-Based Trailing-Stop Trend Indicator for 'quantmod'
 Version: 0.1.0
 Authors@R: person(given = "Lars", family = "Bernhardsson",
                   email = "cran.sherry228@passinbox.com",
@@ -13,15 +13,13 @@ Description: Computes the SuperTrend technical indicator (Olivier Seban,
     calculation matches the conventions used by major charting platforms
     such as TradingView.
 License: MIT + file LICENSE
-URL: https://github.com/your-account/supertrend
-BugReports: https://github.com/your-account/supertrend/issues
 Depends:
     R (>= 3.6.0)
 Imports:
     xts,
     zoo,
     TTR,
-    quantmod
+    quantmod (>= 0.4.0)
 Suggests:
     testthat (>= 3.0.0),
     knitr,
