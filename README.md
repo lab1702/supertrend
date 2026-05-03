@@ -1,0 +1,52 @@
+# supertrend
+
+SuperTrend technical indicator and signals for [quantmod](https://www.quantmod.com).
+
+The SuperTrend indicator is an ATR-based trailing band that flips trend
+direction when price closes through the opposing band. This package
+provides a calculation that matches TradingView's `ta.supertrend`,
+extracts long/short entry and exit signals on trend flips, and adds a
+`quantmod`-idiomatic chart overlay.
+
+## Installation
+
+```r
+# install.packages("remotes")
+remotes::install_github("your-account/supertrend")
+```
+
+## Quickstart
+
+```r
+library(supertrend)
+library(quantmod)
+
+# Use the built-in synthetic dataset (or fetch with getSymbols)
+data(spy_sample)
+
+# 1. Compute the indicator
+st <- SuperTrend(spy_sample, n = 10, multiplier = 3)
+head(st, 15)
+
+# 2. Plot it
+chartSuperTrend(spy_sample, theme = "white")
+
+# 3. Extract signals
+sig <- supertrend_signals(st)
+sig[rowSums(sig) > 0, ]
+```
+
+## API
+
+| Function | Purpose |
+|---|---|
+| `SuperTrend(HLC, n, multiplier, atr_method)` | Compute the indicator. Returns an xts with `supertrend`, `trend`, `upper_band`, `lower_band`. |
+| `supertrend_signals(st)` | Extract long/short entry/exit events on trend flips. |
+| `addSuperTrend(...)` | quantmod overlay — call after `chartSeries()`. |
+| `chartSuperTrend(x, ...)` | One-liner: chart and overlay in one call. |
+
+See `vignette("supertrend")` for a full walkthrough.
+
+## License
+
+MIT
