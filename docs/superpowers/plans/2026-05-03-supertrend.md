@@ -440,7 +440,7 @@ SuperTrend <- function(HLC, n = 10, multiplier = 3,
   if (!xts::is.xts(HLC)) {
     stop("HLC must be an xts object")
   }
-  if (!quantmod::has.HLC(HLC)) {
+  if (!all(quantmod::has.HLC(HLC))) {
     stop("HLC must contain High, Low, and Close columns")
   }
   if (!is.numeric(n) || length(n) != 1L || is.na(n) || n < 1 ||
