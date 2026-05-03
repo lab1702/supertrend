@@ -1,10 +1,14 @@
 # Generates data/spy_sample.rda — a deterministic synthetic OHLC series
 # resembling daily SPY data. No network access required.
 # Re-run this manually after editing; not run during package build.
+# Must be sourced from the package root: source("data-raw/build_spy_sample.R")
 
 set.seed(20260503)
 n <- 252  # one trading year
-dates <- seq(as.Date("2025-01-02"), by = "day", length.out = n)
+# Filter to weekdays only — equity ETFs don't trade on weekends.
+all_days <- seq(as.Date("2025-01-02"), by = "day",
+                length.out = ceiling(n * 7 / 5) + 10)
+dates    <- all_days[!weekdays(all_days) %in% c("Saturday", "Sunday")][seq_len(n)]
 
 log_returns <- stats::rnorm(n, mean = 0.0005, sd = 0.012)
 close <- 470 * exp(cumsum(log_returns))
