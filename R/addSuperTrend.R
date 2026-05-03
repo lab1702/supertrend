@@ -45,7 +45,6 @@ addSuperTrend <- function(n = 10, multiplier = 3,
   st <- SuperTrend(x, n = n, multiplier = multiplier,
                    atr_method = atr_method)
 
-  # Insert NA at trend-flip bars so the line breaks visibly at signals.
   trend <- as.numeric(st[, "trend"])
   flips <- c(FALSE, diff(trend) != 0)
   flips[is.na(flips)] <- FALSE
@@ -53,6 +52,21 @@ addSuperTrend <- function(n = 10, multiplier = 3,
   st_line[flips] <- NA
   colnames(st_line) <- "SuperTrend"
 
-  invisible(quantmod::addTA(st_line, on = on, type = "l",
-                            col = col, lwd = lwd))
+  # quantmod::addTA uses NSE: it captures the call expression and
+  # re-evaluates the data symbol at draw time. From a package namespace
+  # the local variable isn't found, so the line silently fails to render.
+  # Workaround: bind the xts to the name "SuperTrend" in a fresh
+  # environment whose parent is .GlobalEnv, then eval() the addTA call
+  # there. addTA's NSE finds the symbol; the user's workspace stays
+  # clean (no .GlobalEnv pollution, so no R CMD check NOTE).
+  ta_env <- new.env(parent = .GlobalEnv)
+  assign("SuperTrend", st_line, envir = ta_env)
+
+  ta <- eval(
+    bquote(quantmod::addTA(SuperTrend, on = .(on), type = "l",
+                           col = .(col), lwd = .(lwd))),
+    envir = ta_env
+  )
+  plot(ta)
+  invisible(ta)
 }
