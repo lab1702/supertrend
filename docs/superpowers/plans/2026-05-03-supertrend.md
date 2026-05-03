@@ -82,7 +82,6 @@ Suggests:
     rmarkdown
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.0
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 ```
