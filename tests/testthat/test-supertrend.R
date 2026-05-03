@@ -45,3 +45,34 @@ test_that("SuperTrend on a strictly falling series flips to downtrend and stays"
   tail_trend <- as.numeric(out$trend[(nrow(out) - 19):nrow(out)])
   expect_true(all(tail_trend == -1))
 })
+
+test_that("SuperTrend handles series with exactly n+1 bars (seed-only output)", {
+  # Series of exactly 11 bars with n=10 — start index = 11 = N, so the
+  # only non-NA output is the seed bar (no flips possible).
+  hlc <- make_monotonic_up_hlc(n = 11)
+  out <- SuperTrend(hlc, n = 10, multiplier = 3)
+
+  # Rows 1-10 are NA, row 11 is the seeded bar.
+  expect_true(all(is.na(out$supertrend[1:10])))
+  expect_false(is.na(out$supertrend[11]))
+  expect_equal(as.numeric(out$trend[11]), 1)
+})
+
+test_that("SuperTrend matches frozen reference values on the mixed fixture", {
+  # Regression snapshot. Initial values verified algorithmically against
+  # the TradingView ta.supertrend specification. If this test fails after
+  # an algorithm or TTR change, regenerate values via:
+  #   out <- SuperTrend(make_mixed_hlc(), n=10, multiplier=3)
+  # and re-verify against an independent reference before updating.
+  out <- SuperTrend(make_mixed_hlc(), n = 10, multiplier = 3)
+
+  expect_equal(as.numeric(out$supertrend[11]), 105.5,    tolerance = 1e-6)
+  expect_equal(as.numeric(out$supertrend[15]), 109.5,    tolerance = 1e-6)
+  expect_equal(as.numeric(out$supertrend[20]), 114.5,    tolerance = 1e-6)
+  expect_equal(as.numeric(out$supertrend[25]), 113.8826, tolerance = 1e-6)
+  expect_equal(as.numeric(out$supertrend[30]), 102.3587, tolerance = 1e-6)
+
+  expect_equal(as.numeric(out$trend[11]),  1)
+  expect_equal(as.numeric(out$trend[20]),  1)
+  expect_equal(as.numeric(out$trend[30]), -1)
+})

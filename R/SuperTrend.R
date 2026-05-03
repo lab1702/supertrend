@@ -42,8 +42,8 @@ SuperTrend <- function(HLC, n = 10, multiplier = 3,
   if (!all(quantmod::has.HLC(HLC))) {
     stop("HLC must contain High, Low, and Close columns")
   }
-  if (!is.numeric(n) || length(n) != 1L || is.na(n) || n < 1 ||
-      n != as.integer(n)) {
+  if (!is.numeric(n) || length(n) != 1L || is.na(n) || !is.finite(n) ||
+      n < 1 || n != as.integer(n)) {
     stop("n must be a positive integer")
   }
   if (!is.numeric(multiplier) || length(multiplier) != 1L ||
@@ -74,7 +74,7 @@ SuperTrend <- function(HLC, n = 10, multiplier = 3,
   st          <- rep(NA_real_, N)
 
   start <- which(!is.na(atr))[1]
-  if (is.na(start) || start >= N) {
+  if (is.na(start)) {
     out <- xts::xts(cbind(supertrend = st, trend = trend,
                           upper_band = upper_final,
                           lower_band = lower_final),
@@ -87,7 +87,7 @@ SuperTrend <- function(HLC, n = 10, multiplier = 3,
   trend[start]       <- 1L
   st[start]          <- lower_final[start]
 
-  for (i in (start + 1L):N) {
+  if (start < N) for (i in (start + 1L):N) {
     upper_final[i] <- if (upper_basic[i] < upper_final[i - 1L] ||
                           cl[i - 1L] > upper_final[i - 1L]) {
       upper_basic[i]
