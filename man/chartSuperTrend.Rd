@@ -11,7 +11,12 @@ chartSuperTrend(
   n = 10,
   multiplier = 3,
   atr_method = c("wilder", "sma", "ema"),
-  col = c("#26a69a", "#ef5350")
+  col = c("#26a69a", "#ef5350"),
+  signals = TRUE,
+  signals_col = col,
+  signals_pch = c(24, 25),
+  signals_cex = 1.2,
+  signals_offset = 0.015
 )
 }
 \arguments{
@@ -26,13 +31,21 @@ chartSuperTrend(
 \item{n, multiplier, atr_method, col}{Passed through to
 \code{\link{addSuperTrend}}. \code{col} is a length-2 character
 vector: uptrend color, downtrend color.}
+
+\item{signals}{Logical. If \code{TRUE} (default), draw buy/sell
+triangles via \code{\link{addSuperTrendSignals}}.}
+
+\item{signals_col, signals_pch, signals_cex, signals_offset}{Passed
+through to \code{\link{addSuperTrendSignals}} when
+\code{signals = TRUE}.}
 }
 \value{
 Invisibly \code{NULL}; called for the side effect of drawing.
 }
 \description{
 Convenience wrapper that draws a \code{\link[quantmod]{chartSeries}}
-price chart and overlays the bicolor SuperTrend line in one call.
+price chart and overlays the bicolor SuperTrend line plus buy/sell
+signal triangles in one call.
 }
 \examples{
 if (interactive()) {
