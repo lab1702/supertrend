@@ -15,6 +15,14 @@ extracts long/short entry and exit signals on trend flips, and adds a
 pak::pak("lab1702/supertrend")
 ```
 
+`pak` does not build vignettes on install. To get the vignette
+locally — `vignette("supertrend")` — install with `remotes` instead:
+
+```r
+# install.packages("remotes")
+remotes::install_github("lab1702/supertrend", build_vignettes = TRUE)
+```
+
 ## Quickstart
 
 ```r
