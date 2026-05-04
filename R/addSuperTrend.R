@@ -34,6 +34,10 @@ split_by_trend <- function(st) {
 #' connect across trend-flip bars (each segment lives on a different
 #' band), producing the canonical SuperTrend visual break.
 #'
+#' By default, buy/sell signal triangles are also drawn at every trend
+#' flip (\code{signals = TRUE}); pass \code{signals = FALSE} to suppress
+#' them.
+#'
 #' @param n,multiplier,atr_method Passed through to
 #'   \code{\link{SuperTrend}}.
 #' @param col Length-2 character vector of colors. \code{col[1]} is
@@ -43,9 +47,15 @@ split_by_trend <- function(st) {
 #' @param lwd Line width.
 #' @param on Chart panel to draw on. \code{1} = price panel (the
 #'   default and the only sensible choice for SuperTrend).
+#' @param signals Logical. If \code{TRUE} (default), draw buy/sell
+#'   triangles via \code{\link{addSuperTrendSignals}} after the line.
+#' @param signals_col,signals_pch,signals_cex,signals_offset Passed
+#'   through to \code{\link{addSuperTrendSignals}} when
+#'   \code{signals = TRUE}. \code{signals_col} defaults to \code{col}
+#'   so triangles match the line by default.
 #'
 #' @return Invisibly \code{NULL}; called for the side effect of drawing
-#'   two overlay layers on the active chart.
+#'   overlay layers on the active chart.
 #'
 #' @examples
 #' if (interactive()) {
@@ -58,7 +68,12 @@ split_by_trend <- function(st) {
 addSuperTrend <- function(n = 10, multiplier = 3,
                           atr_method = c("wilder", "sma", "ema"),
                           col = c("#26a69a", "#ef5350"),
-                          lwd = 2, on = 1) {
+                          lwd = 2, on = 1,
+                          signals = TRUE,
+                          signals_col = col,
+                          signals_pch = c(24, 25),
+                          signals_cex = 1.2,
+                          signals_offset = 0.015) {
   atr_method <- match.arg(atr_method)
   if (!is.character(col) || length(col) != 2L ||
       anyNA(col) || any(!nzchar(col))) {
@@ -70,6 +85,9 @@ addSuperTrend <- function(n = 10, multiplier = 3,
   if (!is.numeric(on) || length(on) != 1L || !is.finite(on) ||
       on != as.integer(on) || on < 1) {
     stop("on must be a positive integer panel index")
+  }
+  if (!is.logical(signals) || length(signals) != 1L || is.na(signals)) {
+    stop("signals must be a single TRUE or FALSE")
   }
 
   get_chob <- utils::getFromNamespace("get.current.chob", "quantmod")
@@ -111,5 +129,14 @@ addSuperTrend <- function(n = 10, multiplier = 3,
   )
   plot(ta_up)
   plot(ta_down)
+
+  if (isTRUE(signals)) {
+    addSuperTrendSignals(n = n, multiplier = multiplier,
+                         atr_method = atr_method,
+                         col = signals_col, pch = signals_pch,
+                         cex = signals_cex, offset = signals_offset,
+                         on = on)
+  }
+
   invisible(NULL)
 }
