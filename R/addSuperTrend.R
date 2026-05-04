@@ -60,7 +60,8 @@ addSuperTrend <- function(n = 10, multiplier = 3,
                           col = c("#26a69a", "#ef5350"),
                           lwd = 2, on = 1) {
   atr_method <- match.arg(atr_method)
-  if (!is.character(col) || length(col) != 2L) {
+  if (!is.character(col) || length(col) != 2L ||
+      anyNA(col) || any(!nzchar(col))) {
     stop("col must be a length-2 character vector: c(uptrend, downtrend)")
   }
   if (!is.numeric(lwd) || length(lwd) != 1L || !is.finite(lwd) || lwd <= 0) {

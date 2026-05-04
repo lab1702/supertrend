@@ -64,6 +64,38 @@ test_that("addSuperTrend rejects non-character col", {
                "col must be a length-2 character vector")
 })
 
+test_that("addSuperTrend rejects col with NA element", {
+  skip_on_cran()
+
+  pdf(file = NULL)
+  on.exit(dev.off(), add = TRUE)
+
+  data(spy_sample, package = "supertrend")
+  quantmod::chartSeries(spy_sample, theme = "white")
+  expect_error(addSuperTrend(col = c("blue", NA)),
+               "col must be a length-2 character vector")
+  expect_error(addSuperTrend(col = c(NA_character_, "red")),
+               "col must be a length-2 character vector")
+  expect_error(addSuperTrend(col = c(NA_character_, NA_character_)),
+               "col must be a length-2 character vector")
+})
+
+test_that("addSuperTrend rejects col with empty-string element", {
+  skip_on_cran()
+
+  pdf(file = NULL)
+  on.exit(dev.off(), add = TRUE)
+
+  data(spy_sample, package = "supertrend")
+  quantmod::chartSeries(spy_sample, theme = "white")
+  expect_error(addSuperTrend(col = c("", "red")),
+               "col must be a length-2 character vector")
+  expect_error(addSuperTrend(col = c("blue", "")),
+               "col must be a length-2 character vector")
+  expect_error(addSuperTrend(col = c("", "")),
+               "col must be a length-2 character vector")
+})
+
 test_that("addSuperTrend rejects invalid lwd", {
   skip_on_cran()
   pdf(file = NULL)
