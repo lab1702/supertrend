@@ -46,9 +46,10 @@ chartSuperTrend(spy_sample, theme = "white",
                 n = 10, multiplier = 3)
 ```
 
-The SuperTrend line is drawn in a single color (default blue) with
-breaks at trend-flip bars; bicolor by trend direction is a planned
-v0.2.0 enhancement. To layer it onto an existing chart instead, use
+The SuperTrend line is drawn in two colors — green during uptrends
+(`trend == +1`) and red during downtrends (`trend == -1`) — with a
+visible break at each trend flip. To layer it onto an existing chart
+instead, use
 `addSuperTrend()`:
 
 ```{r}

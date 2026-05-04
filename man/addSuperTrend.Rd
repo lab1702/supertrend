@@ -8,7 +8,7 @@ addSuperTrend(
   n = 10,
   multiplier = 3,
   atr_method = c("wilder", "sma", "ema"),
-  col = "#1976d2",
+  col = c("#26a69a", "#ef5350"),
   lwd = 2,
   on = 1
 )
@@ -17,7 +17,10 @@ addSuperTrend(
 \item{n, multiplier, atr_method}{Passed through to
 \code{\link{SuperTrend}}.}
 
-\item{col}{Line color. Defaults to a medium blue.}
+\item{col}{Length-2 character vector of colors. \code{col[1]} is
+used for uptrend bars (\code{trend == +1}); \code{col[2]} for
+downtrend bars (\code{trend == -1}). Defaults to TradingView's
+green / red.}
 
 \item{lwd}{Line width.}
 
@@ -25,18 +28,21 @@ addSuperTrend(
 default and the only sensible choice for SuperTrend).}
 }
 \value{
-Invisibly, the result of the underlying
-  \code{\link[quantmod]{addTA}} call.
+Invisibly \code{NULL}; called for the side effect of drawing
+  two overlay layers on the active chart.
 }
 \description{
-Adds a SuperTrend line to the price panel of the currently active
-\code{\link[quantmod]{chartSeries}} chart. Behaves like
+Adds a bicolor SuperTrend line to the price panel of the currently
+active \code{\link[quantmod]{chartSeries}} chart. Behaves like
 \code{\link[quantmod]{addBBands}}: must be called after the chart
 has been drawn, draws on the price panel by default.
 }
 \details{
-The line is drawn with \code{NA} gaps at trend-flip bars so the
-visual breaks indicate where signals occur.
+The line is drawn in two colors: \code{col[1]} on bars where
+\code{trend == +1} (uptrend) and \code{col[2]} on bars where
+\code{trend == -1} (downtrend). The two segments meet but do not
+connect across trend-flip bars (each segment lives on a different
+band), producing the canonical SuperTrend visual break.
 }
 \examples{
 \dontrun{
