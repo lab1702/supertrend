@@ -29,7 +29,6 @@
 #' if (interactive()) {
 #'   data(spy_sample)
 #'   quantmod::chartSeries(spy_sample)
-#'   addSuperTrend(signals = FALSE)
 #'   addSuperTrendSignals()
 #' }
 #'
