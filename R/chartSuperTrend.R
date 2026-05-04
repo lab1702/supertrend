@@ -1,7 +1,8 @@
 #' Chart a Series with SuperTrend Overlay
 #'
 #' Convenience wrapper that draws a \code{\link[quantmod]{chartSeries}}
-#' price chart and overlays the bicolor SuperTrend line in one call.
+#' price chart and overlays the bicolor SuperTrend line plus buy/sell
+#' signal triangles in one call.
 #'
 #' @param x An \code{xts} OHLC series.
 #' @param ... Additional arguments passed to
@@ -11,6 +12,11 @@
 #' @param n,multiplier,atr_method,col Passed through to
 #'   \code{\link{addSuperTrend}}. \code{col} is a length-2 character
 #'   vector: uptrend color, downtrend color.
+#' @param signals Logical. If \code{TRUE} (default), draw buy/sell
+#'   triangles via \code{\link{addSuperTrendSignals}}.
+#' @param signals_col,signals_pch,signals_cex,signals_offset Passed
+#'   through to \code{\link{addSuperTrendSignals}} when
+#'   \code{signals = TRUE}.
 #'
 #' @return Invisibly \code{NULL}; called for the side effect of drawing.
 #'
@@ -24,10 +30,20 @@
 chartSuperTrend <- function(x, ..., name = deparse(substitute(x)),
                             n = 10, multiplier = 3,
                             atr_method = c("wilder", "sma", "ema"),
-                            col = c("#26a69a", "#ef5350")) {
+                            col = c("#26a69a", "#ef5350"),
+                            signals = TRUE,
+                            signals_col = col,
+                            signals_pch = c(24, 25),
+                            signals_cex = 1.2,
+                            signals_offset = 0.015) {
   atr_method <- match.arg(atr_method)
   quantmod::chartSeries(x, name = name, ...)
   addSuperTrend(n = n, multiplier = multiplier,
-                atr_method = atr_method, col = col)
+                atr_method = atr_method, col = col,
+                signals = signals,
+                signals_col = signals_col,
+                signals_pch = signals_pch,
+                signals_cex = signals_cex,
+                signals_offset = signals_offset)
   invisible(NULL)
 }

@@ -186,3 +186,20 @@ test_that("addSuperTrend ignores signals_* args when signals = FALSE", {
   # short-circuits the call so the argument is never used.
   expect_no_error(addSuperTrend(signals = FALSE, signals_col = "bogus"))
 })
+
+test_that("chartSuperTrend signals = FALSE is accepted and runs", {
+  skip_on_cran()
+  pdf(file = NULL); on.exit(dev.off(), add = TRUE)
+  data(spy_sample, package = "supertrend")
+  expect_no_error(chartSuperTrend(spy_sample, signals = FALSE))
+})
+
+test_that("chartSuperTrend forwards signals_col to the marker layer", {
+  skip_on_cran()
+  pdf(file = NULL); on.exit(dev.off(), add = TRUE)
+  data(spy_sample, package = "supertrend")
+  expect_no_error(
+    chartSuperTrend(spy_sample,
+                    signals_col = c("forestgreen", "firebrick"))
+  )
+})
