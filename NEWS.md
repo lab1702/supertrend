@@ -1,3 +1,13 @@
+# supertrend 0.2.1
+
+* Documentation polish for CRAN submission. Examples no longer pin
+  `theme = "white"` so quantmod's default theme is used in `?addSuperTrend`,
+  `?chartSuperTrend`, the vignette, and the README.
+* Replaced `\dontrun{}` with `if (interactive()) { ... }` in roxygen
+  examples so example syntax is checked by `R CMD check` while
+  rendering still only runs interactively.
+* Excluded `.claude/` from the source tarball via `.Rbuildignore`.
+
 # supertrend 0.2.0
 
 ## Breaking changes
