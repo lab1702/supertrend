@@ -45,7 +45,7 @@ test_that("addSuperTrend rejects a length-1 col (scalar no longer allowed)", {
   on.exit(dev.off(), add = TRUE)
 
   data(spy_sample, package = "supertrend")
-  quantmod::chartSeries(spy_sample, theme = "white")
+  quantmod::chartSeries(spy_sample)
   expect_error(addSuperTrend(col = "blue"),
                "col must be a length-2 character vector")
 })
@@ -57,7 +57,7 @@ test_that("addSuperTrend rejects a length-3 col", {
   on.exit(dev.off(), add = TRUE)
 
   data(spy_sample, package = "supertrend")
-  quantmod::chartSeries(spy_sample, theme = "white")
+  quantmod::chartSeries(spy_sample)
   expect_error(addSuperTrend(col = c("a", "b", "c")),
                "col must be a length-2 character vector")
 })
@@ -69,7 +69,7 @@ test_that("addSuperTrend rejects non-character col", {
   on.exit(dev.off(), add = TRUE)
 
   data(spy_sample, package = "supertrend")
-  quantmod::chartSeries(spy_sample, theme = "white")
+  quantmod::chartSeries(spy_sample)
   expect_error(addSuperTrend(col = c(1, 2)),
                "col must be a length-2 character vector")
 })
@@ -81,7 +81,7 @@ test_that("addSuperTrend rejects col with NA element", {
   on.exit(dev.off(), add = TRUE)
 
   data(spy_sample, package = "supertrend")
-  quantmod::chartSeries(spy_sample, theme = "white")
+  quantmod::chartSeries(spy_sample)
   expect_error(addSuperTrend(col = c("blue", NA)),
                "col must be a length-2 character vector")
   expect_error(addSuperTrend(col = c(NA_character_, "red")),
@@ -97,7 +97,7 @@ test_that("addSuperTrend rejects col with empty-string element", {
   on.exit(dev.off(), add = TRUE)
 
   data(spy_sample, package = "supertrend")
-  quantmod::chartSeries(spy_sample, theme = "white")
+  quantmod::chartSeries(spy_sample)
   expect_error(addSuperTrend(col = c("", "red")),
                "col must be a length-2 character vector")
   expect_error(addSuperTrend(col = c("blue", "")),
@@ -111,7 +111,7 @@ test_that("addSuperTrend rejects invalid lwd", {
   pdf(file = NULL)
   on.exit(dev.off(), add = TRUE)
   data(spy_sample, package = "supertrend")
-  quantmod::chartSeries(spy_sample, theme = "white")
+  quantmod::chartSeries(spy_sample)
   expect_error(addSuperTrend(lwd = "two"),  "lwd must be a positive number")
   expect_error(addSuperTrend(lwd = 0),      "lwd must be a positive number")
   expect_error(addSuperTrend(lwd = -1),     "lwd must be a positive number")
@@ -122,7 +122,7 @@ test_that("addSuperTrend rejects invalid on", {
   pdf(file = NULL)
   on.exit(dev.off(), add = TRUE)
   data(spy_sample, package = "supertrend")
-  quantmod::chartSeries(spy_sample, theme = "white")
+  quantmod::chartSeries(spy_sample)
   expect_error(addSuperTrend(on = 0),    "on must be a positive integer panel index")
   expect_error(addSuperTrend(on = -1),   "on must be a positive integer panel index")
   expect_error(addSuperTrend(on = 1.5),  "on must be a positive integer panel index")

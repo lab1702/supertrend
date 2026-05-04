@@ -15,9 +15,9 @@
 #' @return Invisibly \code{NULL}; called for the side effect of drawing.
 #'
 #' @examples
-#' \dontrun{
+#' if (interactive()) {
 #'   data(spy_sample)
-#'   chartSuperTrend(spy_sample, theme = "white")
+#'   chartSuperTrend(spy_sample)
 #' }
 #'
 #' @export

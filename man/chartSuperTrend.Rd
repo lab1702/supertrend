@@ -35,9 +35,9 @@ Convenience wrapper that draws a \code{\link[quantmod]{chartSeries}}
 price chart and overlays the bicolor SuperTrend line in one call.
 }
 \examples{
-\dontrun{
+if (interactive()) {
   data(spy_sample)
-  chartSuperTrend(spy_sample, theme = "white")
+  chartSuperTrend(spy_sample)
 }
 
 }

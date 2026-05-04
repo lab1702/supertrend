@@ -29,7 +29,7 @@ st <- SuperTrend(spy_sample, n = 10, multiplier = 3)
 head(st, 15)
 
 # 2. Plot it
-chartSuperTrend(spy_sample, theme = "white")
+chartSuperTrend(spy_sample)
 
 # 3. Extract signals
 sig <- supertrend_signals(st)

@@ -48,9 +48,9 @@ split_by_trend <- function(st) {
 #'   two overlay layers on the active chart.
 #'
 #' @examples
-#' \dontrun{
+#' if (interactive()) {
 #'   data(spy_sample)
-#'   quantmod::chartSeries(spy_sample, theme = "white")
+#'   quantmod::chartSeries(spy_sample)
 #'   addSuperTrend()
 #' }
 #'

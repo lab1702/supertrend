@@ -45,9 +45,9 @@ connect across trend-flip bars (each segment lives on a different
 band), producing the canonical SuperTrend visual break.
 }
 \examples{
-\dontrun{
+if (interactive()) {
   data(spy_sample)
-  quantmod::chartSeries(spy_sample, theme = "white")
+  quantmod::chartSeries(spy_sample)
   addSuperTrend()
 }
 

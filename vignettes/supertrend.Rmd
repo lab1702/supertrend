@@ -42,8 +42,7 @@ The output xts has four columns:
 ## Plotting
 
 ```{r}
-chartSuperTrend(spy_sample, theme = "white",
-                n = 10, multiplier = 3)
+chartSuperTrend(spy_sample, n = 10, multiplier = 3)
 ```
 
 The SuperTrend line is drawn in two colors — green during uptrends
@@ -53,7 +52,7 @@ instead, use
 `addSuperTrend()`:
 
 ```{r}
-quantmod::chartSeries(spy_sample, theme = "white", name = "SPY (synthetic)")
+quantmod::chartSeries(spy_sample, name = "SPY (synthetic)")
 addSuperTrend(n = 10, multiplier = 3)
 ```
 
