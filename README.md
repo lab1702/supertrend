@@ -73,10 +73,6 @@ addSuperTrendSignals()
 
 See `vignette("supertrend")` for a full walkthrough.
 
-## Roadmap
-
-- v0.3.0: ggplot2-based visualization function for non-quantmod workflows.
-
 ## License
 
 MIT
