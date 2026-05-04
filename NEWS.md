@@ -8,6 +8,11 @@
   `col` must now be a length-2 character vector. Code that passed a
   scalar color in v0.1.0 will need to pass a length-2 vector.
 
+* `addSuperTrend()` now returns `invisible(NULL)` instead of the
+  underlying `chobTA` object. Two overlay layers are drawn and there
+  is no single object that naturally represents both. Code that
+  captured the v0.1.0 return value will silently get `NULL`.
+
 # supertrend 0.1.0
 
 * Initial release.
