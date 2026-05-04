@@ -67,8 +67,8 @@ Description: Computes the SuperTrend technical indicator (Olivier Seban,
     calculation matches the conventions used by major charting platforms
     such as TradingView.
 License: MIT + file LICENSE
-URL: https://github.com/your-account/supertrend
-BugReports: https://github.com/your-account/supertrend/issues
+URL: https://github.com/lab1702/supertrend
+BugReports: https://github.com/lab1702/supertrend/issues
 Depends:
     R (>= 3.6.0)
 Imports:
@@ -1114,8 +1114,8 @@ extracts long/short entry and exit signals on trend flips, and adds a
 ## Installation
 
 ```r
-# install.packages("remotes")
-remotes::install_github("your-account/supertrend")
+# install.packages("pak")
+pak::pak("lab1702/supertrend")
 ```
 
 ## Quickstart

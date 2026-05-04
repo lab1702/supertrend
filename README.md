@@ -11,8 +11,8 @@ extracts long/short entry and exit signals on trend flips, and adds a
 ## Installation
 
 ```r
-# install.packages("remotes")
-remotes::install_github("your-account/supertrend")
+# install.packages("pak")
+pak::pak("lab1702/supertrend")
 ```
 
 ## Quickstart
