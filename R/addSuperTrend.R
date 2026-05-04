@@ -23,23 +23,29 @@ split_by_trend <- function(st) {
 
 #' Add SuperTrend Overlay to an Active 'quantmod' Chart
 #'
-#' Adds a SuperTrend line to the price panel of the currently active
-#' \code{\link[quantmod]{chartSeries}} chart. Behaves like
+#' Adds a bicolor SuperTrend line to the price panel of the currently
+#' active \code{\link[quantmod]{chartSeries}} chart. Behaves like
 #' \code{\link[quantmod]{addBBands}}: must be called after the chart
 #' has been drawn, draws on the price panel by default.
 #'
-#' The line is drawn with \code{NA} gaps at trend-flip bars so the
-#' visual breaks indicate where signals occur.
+#' The line is drawn in two colors: \code{col[1]} on bars where
+#' \code{trend == +1} (uptrend) and \code{col[2]} on bars where
+#' \code{trend == -1} (downtrend). The two segments meet but do not
+#' connect across trend-flip bars (each segment lives on a different
+#' band), producing the canonical SuperTrend visual break.
 #'
 #' @param n,multiplier,atr_method Passed through to
 #'   \code{\link{SuperTrend}}.
-#' @param col Line color. Defaults to a medium blue.
+#' @param col Length-2 character vector of colors. \code{col[1]} is
+#'   used for uptrend bars (\code{trend == +1}); \code{col[2]} for
+#'   downtrend bars (\code{trend == -1}). Defaults to TradingView's
+#'   green / red.
 #' @param lwd Line width.
 #' @param on Chart panel to draw on. \code{1} = price panel (the
 #'   default and the only sensible choice for SuperTrend).
 #'
-#' @return Invisibly, the result of the underlying
-#'   \code{\link[quantmod]{addTA}} call.
+#' @return Invisibly \code{NULL}; called for the side effect of drawing
+#'   two overlay layers on the active chart.
 #'
 #' @examples
 #' \dontrun{
@@ -51,11 +57,11 @@ split_by_trend <- function(st) {
 #' @export
 addSuperTrend <- function(n = 10, multiplier = 3,
                           atr_method = c("wilder", "sma", "ema"),
-                          col = "#1976d2",
+                          col = c("#26a69a", "#ef5350"),
                           lwd = 2, on = 1) {
   atr_method <- match.arg(atr_method)
-  if (!is.character(col) || length(col) != 1L) {
-    stop("col must be a single color string")
+  if (!is.character(col) || length(col) != 2L) {
+    stop("col must be a length-2 character vector: c(uptrend, downtrend)")
   }
   if (!is.numeric(lwd) || length(lwd) != 1L || !is.finite(lwd) || lwd <= 0) {
     stop("lwd must be a positive number")
@@ -74,34 +80,35 @@ addSuperTrend <- function(n = 10, multiplier = 3,
 
   st <- SuperTrend(x, n = n, multiplier = multiplier,
                    atr_method = atr_method)
-
-  trend <- as.numeric(st[, "trend"])
-  flips <- c(FALSE, diff(trend) != 0)
-  flips[is.na(flips)] <- FALSE
-  st_line <- st[, "supertrend"]
-  st_line[flips] <- NA
-  colnames(st_line) <- "SuperTrend"
-
-  # Single-color line in v0.1.0; bicolor by trend (green/red) deferred
-  # to v0.2.0 because consecutive quantmod::addTA calls from inside one
-  # function frame don't accumulate — only the last TA persists in the
-  # chob, defeating the bicolor approach.
+  parts <- split_by_trend(st)
 
   # quantmod::addTA uses NSE: it captures the call expression and
   # re-evaluates the data symbol at draw time. From a package namespace
-  # the local variable isn't found, so the line silently fails to render.
-  # Workaround: bind the xts to the name "SuperTrend" in a fresh
-  # environment whose parent is .GlobalEnv, then eval() the addTA call
-  # there. addTA's NSE finds the symbol; the user's workspace stays
-  # clean (no .GlobalEnv pollution, so no R CMD check NOTE).
+  # the local variable isn't found, so the line silently fails to
+  # render. Workaround: bind the xts into a fresh environment whose
+  # parent is .GlobalEnv, then evaluate the addTA call there. addTA's
+  # NSE finds the symbol; the user's workspace stays clean.
+  #
+  # Two single-column overlays (one per color) are required because
+  # quantmod's chartTA renderer can't be coaxed into per-column colors
+  # for a multi-column overlay. plot() must be called on each chobTA
+  # so each layer actually renders (addTA from inside a function frame
+  # returns a chobTA without drawing it).
   ta_env <- new.env(parent = .GlobalEnv)
-  assign("SuperTrend", st_line, envir = ta_env)
+  assign("up_line",   parts$up,   envir = ta_env)
+  assign("down_line", parts$down, envir = ta_env)
 
-  ta <- eval(
-    bquote(quantmod::addTA(SuperTrend, on = .(on), type = "l",
-                           col = .(col), lwd = .(lwd))),
+  ta_up <- eval(
+    bquote(quantmod::addTA(up_line, on = .(on), type = "l",
+                           col = .(col[1L]), lwd = .(lwd))),
     envir = ta_env
   )
-  plot(ta)
-  invisible(ta)
+  ta_down <- eval(
+    bquote(quantmod::addTA(down_line, on = .(on), type = "l",
+                           col = .(col[2L]), lwd = .(lwd))),
+    envir = ta_env
+  )
+  plot(ta_up)
+  plot(ta_down)
+  invisible(NULL)
 }
