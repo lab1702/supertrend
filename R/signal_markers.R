@@ -2,8 +2,8 @@
 # of two single-column xts:
 #   buy[i]  = lo[i] - pad  on bars where trend flips -1 -> +1, NA elsewhere
 #   sell[i] = hi[i] + pad  on bars where trend flips +1 -> -1, NA elsewhere
-# pad = offset * (max(hi) - min(lo)) — a fraction of the visible panel
-# range so markers sit just outside the candle. By construction, buy
+# pad = offset * (max(hi) - min(lo)) — a fraction of the data range so
+# markers sit just outside the candle. By construction, buy
 # and sell never share a non-NA row (a flip is up XOR down).
 #
 # st: xts returned by SuperTrend() (must contain a `trend` column).

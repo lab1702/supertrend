@@ -16,7 +16,7 @@ test_that("signal_markers returns a list of two single-column xts named buy/sell
   expect_equal(zoo::index(out$sell), zoo::index(st))
 })
 
-test_that("signal_markers buy/sell counts match supertrend_signals flip counts", {
+test_that("signal_markers buy/sell rows align row-for-row with supertrend_signals", {
   hlc <- make_mixed_hlc()
   st  <- SuperTrend(hlc, n = 10, multiplier = 3)
   hi  <- as.numeric(quantmod::Hi(hlc))
@@ -25,10 +25,10 @@ test_that("signal_markers buy/sell counts match supertrend_signals flip counts",
 
   out <- supertrend:::signal_markers(st, hi, lo, offset = 0.015)
 
-  expect_equal(sum(!is.na(as.numeric(out$buy))),
-               sum(as.integer(sig[, "long_entry"])))
-  expect_equal(sum(!is.na(as.numeric(out$sell))),
-               sum(as.integer(sig[, "short_entry"])))
+  expect_equal(which(!is.na(as.numeric(out$buy))),
+               which(as.integer(sig[, "long_entry"]) == 1L))
+  expect_equal(which(!is.na(as.numeric(out$sell))),
+               which(as.integer(sig[, "short_entry"]) == 1L))
 })
 
 test_that("signal_markers buy y-values equal Lo - pad on flip-up bars", {
