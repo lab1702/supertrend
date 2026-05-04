@@ -10,7 +10,12 @@ addSuperTrend(
   atr_method = c("wilder", "sma", "ema"),
   col = c("#26a69a", "#ef5350"),
   lwd = 2,
-  on = 1
+  on = 1,
+  signals = TRUE,
+  signals_col = col,
+  signals_pch = c(24, 25),
+  signals_cex = 1.2,
+  signals_offset = 0.015
 )
 }
 \arguments{
@@ -26,10 +31,18 @@ green / red.}
 
 \item{on}{Chart panel to draw on. \code{1} = price panel (the
 default and the only sensible choice for SuperTrend).}
+
+\item{signals}{Logical. If \code{TRUE} (default), draw buy/sell
+triangles via \code{\link{addSuperTrendSignals}} after the line.}
+
+\item{signals_col, signals_pch, signals_cex, signals_offset}{Passed
+through to \code{\link{addSuperTrendSignals}} when
+\code{signals = TRUE}. \code{signals_col} defaults to \code{col}
+so triangles match the line by default.}
 }
 \value{
 Invisibly \code{NULL}; called for the side effect of drawing
-  two overlay layers on the active chart.
+  overlay layers on the active chart.
 }
 \description{
 Adds a bicolor SuperTrend line to the price panel of the currently
@@ -43,6 +56,10 @@ The line is drawn in two colors: \code{col[1]} on bars where
 \code{trend == -1} (downtrend). The two segments meet but do not
 connect across trend-flip bars (each segment lives on a different
 band), producing the canonical SuperTrend visual break.
+
+By default, buy/sell signal triangles are also drawn at every trend
+flip (\code{signals = TRUE}); pass \code{signals = FALSE} to suppress
+them.
 }
 \examples{
 if (interactive()) {

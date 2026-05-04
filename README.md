@@ -36,6 +36,24 @@ sig <- supertrend_signals(st)
 sig[rowSums(sig) > 0, ]
 ```
 
+The chart now also marks every trend flip with a TradingView-style
+triangle: a green up-triangle below the bar where the trend turns up
+(buy signal), and a red down-triangle above the bar where it turns
+down (sell signal). To suppress them, pass `signals = FALSE`:
+
+```r
+chartSuperTrend(spy_sample, signals = FALSE)
+```
+
+You can also draw the triangles independently after a chart has been
+rendered:
+
+```r
+chartSeries(spy_sample)
+addSuperTrend(signals = FALSE)
+addSuperTrendSignals()
+```
+
 ## API
 
 | Function | Purpose |

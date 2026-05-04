@@ -1,3 +1,20 @@
+# supertrend 0.3.0
+
+* New exported function `addSuperTrendSignals()`: draws TradingView-style
+  buy/sell triangles at every SuperTrend trend flip on the active chart.
+  Green up-triangle below the Low of flip-up bars; red down-triangle
+  above the High of flip-down bars.
+
+* `addSuperTrend()` and `chartSuperTrend()` gain a `signals = TRUE`
+  argument (default ON) that calls `addSuperTrendSignals()` after the
+  bicolor line. Pass `signals = FALSE` to restore the v0.2.1 line-only
+  output.
+
+* New `signals_col`, `signals_pch`, `signals_cex`, `signals_offset`
+  pass-through arguments on `addSuperTrend()` and `chartSuperTrend()`
+  for customizing the marker layer. `signals_col` defaults to `col`,
+  so triangles match the bicolor line by default.
+
 # supertrend 0.2.1
 
 * Documentation polish for CRAN submission. Examples no longer pin

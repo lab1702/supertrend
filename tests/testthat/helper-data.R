@@ -1,14 +1,17 @@
 # Test fixtures for SuperTrend tests.
 # All series are deterministic; no randomness, no I/O.
 
-# 30-bar OHLC where price drifts up then sharply reverses, producing
-# at least one trend flip with the default n=10, multiplier=3 settings.
+# 50-bar OHLC where price drifts up, then sharply reverses, then recovers,
+# producing at least one downward and one upward trend flip with the default
+# n=10, multiplier=3 settings. The first 30 bars are identical to the
+# original fixture so frozen regression snapshots (rows 11-30) are unchanged.
 make_mixed_hlc <- function() {
-  n <- 30
-  # First 20 bars: gentle uptrend. Last 10: sharp downtrend.
+  n <- 50
+  # First 20 bars: gentle uptrend. Next 10: sharp downtrend. Last 20: recovery.
   close <- c(
     seq(100, 119, length.out = 20),
-    seq(118, 95,  length.out = 10)
+    seq(118, 95,  length.out = 10),
+    seq(96,  120, length.out = 20)
   )
   high <- close + 0.5
   low  <- close - 0.5

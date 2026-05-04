@@ -2,6 +2,7 @@
 
 export(SuperTrend)
 export(addSuperTrend)
+export(addSuperTrendSignals)
 export(chartSuperTrend)
 export(supertrend_signals)
 importFrom(TTR,ATR)
