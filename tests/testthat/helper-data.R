@@ -1,6 +1,22 @@
 # Test fixtures for SuperTrend tests.
 # All series are deterministic; no randomness, no I/O.
 
+# Run `code` with a hidden PDF device active and a chartSeries() of
+# `x` drawn (defaults to the built-in spy_sample fixture). The device
+# is closed on exit so tests can be chained without leaking devices.
+with_chart <- function(code, x = .spy_sample()) {
+  pdf(file = NULL); on.exit(dev.off(), add = TRUE)
+  quantmod::chartSeries(x)
+  force(code)
+}
+
+# Load the built-in spy_sample fixture without polluting the caller's env.
+.spy_sample <- function() {
+  e <- new.env()
+  utils::data("spy_sample", package = "supertrend", envir = e)
+  e$spy_sample
+}
+
 # 50-bar OHLC where price drifts up, then sharply reverses, then recovers,
 # producing at least one downward and one upward trend flip with the default
 # n=10, multiplier=3 settings. The first 30 bars are identical to the
