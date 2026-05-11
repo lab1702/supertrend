@@ -6,7 +6,7 @@
 #'
 #' @keywords internal
 #' @importFrom xts xts is.xts
-#' @importFrom zoo index coredata
+#' @importFrom zoo index
 #' @importFrom TTR ATR
 #' @importFrom quantmod has.HLC Hi Lo Cl chartSeries addTA
 "_PACKAGE"

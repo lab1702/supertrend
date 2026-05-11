@@ -73,7 +73,7 @@ addSuperTrend <- function(n = 10, multiplier = 3,
   .check_col2(col, "c(uptrend, downtrend)")
   .check_pos_num(lwd, "lwd")
   .check_pos_int(on, "on")
-  if (!is.logical(signals) || length(signals) != 1L || is.na(signals)) {
+  if (!(isTRUE(signals) || isFALSE(signals))) {
     stop("signals must be a single TRUE or FALSE")
   }
 
