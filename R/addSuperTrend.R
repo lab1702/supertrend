@@ -1,26 +1,3 @@
-# Split a SuperTrend output into two trend-masked single-column xts for
-# bicolor rendering. `up` carries the supertrend value where trend == +1
-# (NA elsewhere); `down` carries it where trend == -1. Warm-up rows
-# (trend is NA) are NA in both. By construction the two elements never
-# have a non-NA value in the same row.
-split_by_trend <- function(st) {
-  idx   <- zoo::index(st)
-  trend <- as.numeric(st[, "trend"])
-  vals  <- as.numeric(st[, "supertrend"])
-
-  up_vals   <- ifelse(!is.na(trend) & trend ==  1L, vals, NA_real_)
-  down_vals <- ifelse(!is.na(trend) & trend == -1L, vals, NA_real_)
-
-  up   <- xts::xts(matrix(up_vals,   ncol = 1L,
-                          dimnames = list(NULL, "up")),
-                   order.by = idx)
-  down <- xts::xts(matrix(down_vals, ncol = 1L,
-                          dimnames = list(NULL, "down")),
-                   order.by = idx)
-
-  list(up = up, down = down)
-}
-
 #' Add SuperTrend Overlay to an Active 'quantmod' Chart
 #'
 #' Adds a bicolor SuperTrend line to the price panel of the currently

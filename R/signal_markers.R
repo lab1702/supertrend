@@ -1,14 +1,6 @@
-# Build buy/sell marker layers from a SuperTrend result. Returns a list
-# of two single-column xts:
-#   buy[i]  = lo[i] - pad  on bars where trend flips -1 -> +1, NA elsewhere
-#   sell[i] = hi[i] + pad  on bars where trend flips +1 -> -1, NA elsewhere
-# pad = offset * (max(hi) - min(lo)) — a fraction of the data range so
-# markers sit just outside the candle. By construction, buy
-# and sell never share a non-NA row (a flip is up XOR down).
-#
-# st: xts returned by SuperTrend() (must contain a `trend` column).
-# hi, lo: numeric vectors of High and Low aligned to st (same length).
-# offset: positive numeric — fraction of panel range used as padding.
+# Build buy/sell triangle layers from a SuperTrend result: one xts per
+# direction, non-NA only on flip bars, offset off the candle so the
+# triangle sits clear of the wick.
 signal_markers <- function(st, hi, lo, offset) {
   trend <- as.numeric(st[, "trend"])
   prev  <- c(NA_real_, utils::head(trend, -1))
