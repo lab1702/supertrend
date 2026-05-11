@@ -13,10 +13,9 @@
 #'   \code{\link{addSuperTrend}}. \code{col} is a length-2 character
 #'   vector: uptrend color, downtrend color.
 #' @param signals Logical. If \code{TRUE} (default), draw buy/sell
-#'   triangles via \code{\link{addSuperTrendSignals}}.
-#' @param signals_col,signals_pch,signals_cex,signals_offset Passed
-#'   through to \code{\link{addSuperTrendSignals}} when
-#'   \code{signals = TRUE}.
+#'   triangles via \code{\link{addSuperTrendSignals}}. For finer
+#'   control over marker style, pass \code{signals = FALSE} and call
+#'   \code{\link{addSuperTrendSignals}} directly.
 #'
 #' @return Invisibly \code{NULL}; called for the side effect of drawing.
 #'
@@ -31,19 +30,11 @@ chartSuperTrend <- function(x, ..., name = deparse(substitute(x)),
                             n = 10, multiplier = 3,
                             atr_method = c("wilder", "sma", "ema"),
                             col = c("#26a69a", "#ef5350"),
-                            signals = TRUE,
-                            signals_col = col,
-                            signals_pch = c(24, 25),
-                            signals_cex = 1.2,
-                            signals_offset = 0.015) {
+                            signals = TRUE) {
   atr_method <- match.arg(atr_method)
   quantmod::chartSeries(x, name = name, ...)
   addSuperTrend(n = n, multiplier = multiplier,
                 atr_method = atr_method, col = col,
-                signals = signals,
-                signals_col = signals_col,
-                signals_pch = signals_pch,
-                signals_cex = signals_cex,
-                signals_offset = signals_offset)
+                signals = signals)
   invisible(NULL)
 }

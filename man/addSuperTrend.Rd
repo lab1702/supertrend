@@ -11,11 +11,7 @@ addSuperTrend(
   col = c("#26a69a", "#ef5350"),
   lwd = 2,
   on = 1,
-  signals = TRUE,
-  signals_col = col,
-  signals_pch = c(24, 25),
-  signals_cex = 1.2,
-  signals_offset = 0.015
+  signals = TRUE
 )
 }
 \arguments{
@@ -33,12 +29,8 @@ green / red.}
 default and the only sensible choice for SuperTrend).}
 
 \item{signals}{Logical. If \code{TRUE} (default), draw buy/sell
-triangles via \code{\link{addSuperTrendSignals}} after the line.}
-
-\item{signals_col, signals_pch, signals_cex, signals_offset}{Passed
-through to \code{\link{addSuperTrendSignals}} when
-\code{signals = TRUE}. \code{signals_col} defaults to \code{col}
-so triangles match the line by default.}
+triangles via \code{\link{addSuperTrendSignals}} using \code{col}
+for marker colors.}
 }
 \value{
 Invisibly \code{NULL}; called for the side effect of drawing
@@ -58,8 +50,10 @@ connect across trend-flip bars (each segment lives on a different
 band), producing the canonical SuperTrend visual break.
 
 By default, buy/sell signal triangles are also drawn at every trend
-flip (\code{signals = TRUE}); pass \code{signals = FALSE} to suppress
-them.
+flip (\code{signals = TRUE}), using \code{col} for the marker
+colors. Pass \code{signals = FALSE} to suppress them, or call
+\code{\link{addSuperTrendSignals}} directly for finer control over
+marker style.
 }
 \examples{
 if (interactive()) {

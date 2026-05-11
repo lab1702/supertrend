@@ -1,3 +1,21 @@
+# supertrend 0.4.0
+
+## Breaking changes
+
+* Removed the `signals_col`, `signals_pch`, `signals_cex`, and
+  `signals_offset` pass-through arguments from `addSuperTrend()` and
+  `chartSuperTrend()`. Signal triangles now always use `col` for their
+  colors and the `addSuperTrendSignals()` defaults for everything else.
+  Code that needs custom marker style should pass `signals = FALSE` and
+  call `addSuperTrendSignals()` directly after the line.
+
+## Improvements
+
+* `addSuperTrend(signals = TRUE)` and `chartSuperTrend()` now compute
+  the SuperTrend object once instead of twice. No user-visible change.
+* `?SuperTrend` documents the trend seed convention: the first valid
+  bar is seeded `trend = +1`, matching Pine Script.
+
 # supertrend 0.3.0
 
 * New exported function `addSuperTrendSignals()`: draws TradingView-style

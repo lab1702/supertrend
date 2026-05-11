@@ -28,7 +28,10 @@ An \code{xts} aligned to the input index with four columns:
   \item{upper_band}{Final (trailing) upper band.}
   \item{lower_band}{Final (trailing) lower band.}
 }
-The first \code{n} rows are \code{NA} (ATR warm-up).
+The first \code{n} rows are \code{NA} (ATR warm-up). The first
+valid bar is seeded with \code{trend = +1}; for a series that opens
+in a clear downtrend the trend column may take a few bars to flip.
+This matches Pine Script's \code{ta.supertrend} initialization.
 }
 \description{
 Computes the SuperTrend technical indicator from an OHLC \code{xts}

@@ -158,33 +158,14 @@ test_that("addSuperTrend rejects non-logical signals", {
                "signals must be a single TRUE or FALSE")
 })
 
-test_that("addSuperTrend forwards signals_col to the marker layer", {
+test_that("addSuperTrend uses col for signal marker colors", {
   skip_on_cran()
   pdf(file = NULL); on.exit(dev.off(), add = TRUE)
   data(spy_sample, package = "supertrend")
   quantmod::chartSeries(spy_sample)
   expect_no_error(
-    addSuperTrend(signals_col = c("forestgreen", "firebrick"))
+    addSuperTrend(col = c("forestgreen", "firebrick"))
   )
-})
-
-test_that("addSuperTrend rejects bad signals_col when signals = TRUE", {
-  skip_on_cran()
-  pdf(file = NULL); on.exit(dev.off(), add = TRUE)
-  data(spy_sample, package = "supertrend")
-  quantmod::chartSeries(spy_sample)
-  expect_error(addSuperTrend(signals_col = "blue"),
-               "col must be a length-2 character vector")
-})
-
-test_that("addSuperTrend ignores signals_* args when signals = FALSE", {
-  skip_on_cran()
-  pdf(file = NULL); on.exit(dev.off(), add = TRUE)
-  data(spy_sample, package = "supertrend")
-  quantmod::chartSeries(spy_sample)
-  # Bad signals_col would error if validated, but signals = FALSE
-  # short-circuits the call so the argument is never used.
-  expect_no_error(addSuperTrend(signals = FALSE, signals_col = "bogus"))
 })
 
 test_that("chartSuperTrend signals = FALSE is accepted and runs", {
@@ -192,25 +173,4 @@ test_that("chartSuperTrend signals = FALSE is accepted and runs", {
   pdf(file = NULL); on.exit(dev.off(), add = TRUE)
   data(spy_sample, package = "supertrend")
   expect_no_error(chartSuperTrend(spy_sample, signals = FALSE))
-})
-
-test_that("chartSuperTrend forwards signals_col to the marker layer", {
-  skip_on_cran()
-  pdf(file = NULL); on.exit(dev.off(), add = TRUE)
-  data(spy_sample, package = "supertrend")
-  expect_no_error(
-    chartSuperTrend(spy_sample,
-                    signals_col = c("forestgreen", "firebrick"))
-  )
-})
-
-test_that("chartSuperTrend forwards bad signals_col through to marker validation", {
-  skip_on_cran()
-  pdf(file = NULL); on.exit(dev.off(), add = TRUE)
-  data(spy_sample, package = "supertrend")
-  # Bad signals_col would have been silently absorbed by `...` in v0.2.1.
-  # If properly forwarded to addSuperTrendSignals(), validation fires with
-  # the expected message. This test fails on the pre-Task-4 wrapper.
-  expect_error(chartSuperTrend(spy_sample, signals_col = "bogus"),
-               "col must be a length-2 character vector")
 })

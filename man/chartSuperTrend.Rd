@@ -12,11 +12,7 @@ chartSuperTrend(
   multiplier = 3,
   atr_method = c("wilder", "sma", "ema"),
   col = c("#26a69a", "#ef5350"),
-  signals = TRUE,
-  signals_col = col,
-  signals_pch = c(24, 25),
-  signals_cex = 1.2,
-  signals_offset = 0.015
+  signals = TRUE
 )
 }
 \arguments{
@@ -33,11 +29,9 @@ chartSuperTrend(
 vector: uptrend color, downtrend color.}
 
 \item{signals}{Logical. If \code{TRUE} (default), draw buy/sell
-triangles via \code{\link{addSuperTrendSignals}}.}
-
-\item{signals_col, signals_pch, signals_cex, signals_offset}{Passed
-through to \code{\link{addSuperTrendSignals}} when
-\code{signals = TRUE}.}
+triangles via \code{\link{addSuperTrendSignals}}. For finer
+control over marker style, pass \code{signals = FALSE} and call
+\code{\link{addSuperTrendSignals}} directly.}
 }
 \value{
 Invisibly \code{NULL}; called for the side effect of drawing.

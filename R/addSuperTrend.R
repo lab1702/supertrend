@@ -35,8 +35,10 @@ split_by_trend <- function(st) {
 #' band), producing the canonical SuperTrend visual break.
 #'
 #' By default, buy/sell signal triangles are also drawn at every trend
-#' flip (\code{signals = TRUE}); pass \code{signals = FALSE} to suppress
-#' them.
+#' flip (\code{signals = TRUE}), using \code{col} for the marker
+#' colors. Pass \code{signals = FALSE} to suppress them, or call
+#' \code{\link{addSuperTrendSignals}} directly for finer control over
+#' marker style.
 #'
 #' @param n,multiplier,atr_method Passed through to
 #'   \code{\link{SuperTrend}}.
@@ -48,11 +50,8 @@ split_by_trend <- function(st) {
 #' @param on Chart panel to draw on. \code{1} = price panel (the
 #'   default and the only sensible choice for SuperTrend).
 #' @param signals Logical. If \code{TRUE} (default), draw buy/sell
-#'   triangles via \code{\link{addSuperTrendSignals}} after the line.
-#' @param signals_col,signals_pch,signals_cex,signals_offset Passed
-#'   through to \code{\link{addSuperTrendSignals}} when
-#'   \code{signals = TRUE}. \code{signals_col} defaults to \code{col}
-#'   so triangles match the line by default.
+#'   triangles via \code{\link{addSuperTrendSignals}} using \code{col}
+#'   for marker colors.
 #'
 #' @return Invisibly \code{NULL}; called for the side effect of drawing
 #'   overlay layers on the active chart.
@@ -69,23 +68,11 @@ addSuperTrend <- function(n = 10, multiplier = 3,
                           atr_method = c("wilder", "sma", "ema"),
                           col = c("#26a69a", "#ef5350"),
                           lwd = 2, on = 1,
-                          signals = TRUE,
-                          signals_col = col,
-                          signals_pch = c(24, 25),
-                          signals_cex = 1.2,
-                          signals_offset = 0.015) {
+                          signals = TRUE) {
   atr_method <- match.arg(atr_method)
-  if (!is.character(col) || length(col) != 2L ||
-      anyNA(col) || any(!nzchar(col))) {
-    stop("col must be a length-2 character vector: c(uptrend, downtrend)")
-  }
-  if (!is.numeric(lwd) || length(lwd) != 1L || !is.finite(lwd) || lwd <= 0) {
-    stop("lwd must be a positive number")
-  }
-  if (!is.numeric(on) || length(on) != 1L || !is.finite(on) ||
-      on != as.integer(on) || on < 1) {
-    stop("on must be a positive integer panel index")
-  }
+  .check_col2(col, "c(uptrend, downtrend)")
+  .check_pos_num(lwd, "lwd")
+  .check_pos_int(on, "on")
   if (!is.logical(signals) || length(signals) != 1L || is.na(signals)) {
     stop("signals must be a single TRUE or FALSE")
   }
@@ -101,41 +88,12 @@ addSuperTrend <- function(n = 10, multiplier = 3,
                    atr_method = atr_method)
   parts <- split_by_trend(st)
 
-  # quantmod::addTA uses NSE: it captures the call expression and
-  # re-evaluates the data symbol at draw time. From a package namespace
-  # the local variable isn't found, so the line silently fails to
-  # render. Workaround: bind the xts into a fresh environment whose
-  # parent is .GlobalEnv, then evaluate the addTA call there. addTA's
-  # NSE finds the symbol; the user's workspace stays clean.
-  #
-  # Two single-column overlays (one per color) are required because
-  # quantmod's chartTA renderer can't be coaxed into per-column colors
-  # for a multi-column overlay. plot() must be called on each chobTA
-  # so each layer actually renders (addTA from inside a function frame
-  # returns a chobTA without drawing it).
-  ta_env <- new.env(parent = .GlobalEnv)
-  assign("up_line",   parts$up,   envir = ta_env)
-  assign("down_line", parts$down, envir = ta_env)
-
-  ta_up <- eval(
-    bquote(quantmod::addTA(up_line, on = .(on), type = "l",
-                           col = .(col[1L]), lwd = .(lwd))),
-    envir = ta_env
-  )
-  ta_down <- eval(
-    bquote(quantmod::addTA(down_line, on = .(on), type = "l",
-                           col = .(col[2L]), lwd = .(lwd))),
-    envir = ta_env
-  )
-  plot(ta_up)
-  plot(ta_down)
+  .draw_ta(parts$up,   on = on, type = "l", col = col[1L], lwd = lwd)
+  .draw_ta(parts$down, on = on, type = "l", col = col[2L], lwd = lwd)
 
   if (isTRUE(signals)) {
-    addSuperTrendSignals(n = n, multiplier = multiplier,
-                         atr_method = atr_method,
-                         col = signals_col, pch = signals_pch,
-                         cex = signals_cex, offset = signals_offset,
-                         on = on)
+    .draw_signal_markers(st, x, col = col, pch = c(24, 25),
+                         cex = 1.2, offset = 0.015, on = on)
   }
 
   invisible(NULL)

@@ -41,24 +41,13 @@ addSuperTrendSignals <- function(n = 10, multiplier = 3,
                                  offset = 0.015,
                                  on = 1) {
   atr_method <- match.arg(atr_method)
-  if (!is.character(col) || length(col) != 2L ||
-      anyNA(col) || any(!nzchar(col))) {
-    stop("col must be a length-2 character vector: c(buy, sell)")
-  }
+  .check_col2(col, "c(buy, sell)")
   if (!is.numeric(pch) || length(pch) != 2L || anyNA(pch)) {
     stop("pch must be a length-2 numeric vector: c(buy, sell)")
   }
-  if (!is.numeric(cex) || length(cex) != 1L || !is.finite(cex) || cex <= 0) {
-    stop("cex must be a positive number")
-  }
-  if (!is.numeric(offset) || length(offset) != 1L ||
-      !is.finite(offset) || offset <= 0) {
-    stop("offset must be a positive number")
-  }
-  if (!is.numeric(on) || length(on) != 1L || !is.finite(on) ||
-      on != as.integer(on) || on < 1) {
-    stop("on must be a positive integer panel index")
-  }
+  .check_pos_num(cex, "cex")
+  .check_pos_num(offset, "offset")
+  .check_pos_int(on, "on")
 
   get_chob <- utils::getFromNamespace("get.current.chob", "quantmod")
   lchob <- get_chob()
@@ -69,32 +58,21 @@ addSuperTrendSignals <- function(n = 10, multiplier = 3,
 
   st <- SuperTrend(x, n = n, multiplier = multiplier,
                    atr_method = atr_method)
+  .draw_signal_markers(st, x, col = col, pch = pch,
+                       cex = cex, offset = offset, on = on)
+}
+
+# Internal: draw the buy/sell triangle layers from a precomputed
+# SuperTrend object. Skips validation and SuperTrend recomputation so
+# addSuperTrend() can reuse the st it already has.
+.draw_signal_markers <- function(st, x, col, pch, cex, offset, on) {
   hi <- as.numeric(quantmod::Hi(x))
   lo <- as.numeric(quantmod::Lo(x))
   parts <- signal_markers(st, hi, lo, offset = offset)
 
-  # Same NSE workaround as addSuperTrend() (see R/addSuperTrend.R
-  # comment block in split_by_trend's caller for full explanation).
-  # Bind the xts into a fresh environment whose parent is .GlobalEnv,
-  # then evaluate the addTA call there. plot() must be called on each
-  # chobTA so the layer renders from inside this function frame.
-  ta_env <- new.env(parent = .GlobalEnv)
-  assign("buy_markers",  parts$buy,  envir = ta_env)
-  assign("sell_markers", parts$sell, envir = ta_env)
-
-  ta_buy <- base::eval (
-    bquote(quantmod::addTA(buy_markers, on = .(on), type = "p",
-                           pch = .(pch[1L]), col = .(col[1L]),
-                           bg = .(col[1L]), cex = .(cex))),
-    envir = ta_env
-  )
-  ta_sell <- base::eval (
-    bquote(quantmod::addTA(sell_markers, on = .(on), type = "p",
-                           pch = .(pch[2L]), col = .(col[2L]),
-                           bg = .(col[2L]), cex = .(cex))),
-    envir = ta_env
-  )
-  plot(ta_buy)
-  plot(ta_sell)
+  .draw_ta(parts$buy,  on = on, type = "p", pch = pch[1L],
+           col = col[1L], bg = col[1L], cex = cex)
+  .draw_ta(parts$sell, on = on, type = "p", pch = pch[2L],
+           col = col[2L], bg = col[2L], cex = cex)
   invisible(NULL)
 }
