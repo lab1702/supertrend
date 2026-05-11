@@ -30,45 +30,21 @@ test_that("addSuperTrend accepts a custom length-2 col vector", {
   )
 })
 
-test_that("addSuperTrend rejects a length-1 col (scalar no longer allowed)", {
-  skip_on_cran()
-  with_chart(
-    expect_error(addSuperTrend(col = "blue"),
-                 "col must be a length-2 character vector")
-  )
-})
-
-test_that("addSuperTrend rejects a length-3 col", {
-  skip_on_cran()
-  with_chart(
-    expect_error(addSuperTrend(col = c("a", "b", "c")),
-                 "col must be a length-2 character vector")
-  )
-})
-
-test_that("addSuperTrend rejects non-character col", {
-  skip_on_cran()
-  with_chart(
-    expect_error(addSuperTrend(col = c(1, 2)),
-                 "col must be a length-2 character vector")
-  )
-})
-
-test_that("addSuperTrend rejects col with NA element", {
+test_that("addSuperTrend rejects bad col vectors", {
   skip_on_cran()
   with_chart({
+    expect_error(addSuperTrend(col = "blue"),
+                 "col must be a length-2 character vector")
+    expect_error(addSuperTrend(col = c("a", "b", "c")),
+                 "col must be a length-2 character vector")
+    expect_error(addSuperTrend(col = c(1, 2)),
+                 "col must be a length-2 character vector")
     expect_error(addSuperTrend(col = c("blue", NA)),
                  "col must be a length-2 character vector")
     expect_error(addSuperTrend(col = c(NA_character_, "red")),
                  "col must be a length-2 character vector")
     expect_error(addSuperTrend(col = c(NA_character_, NA_character_)),
                  "col must be a length-2 character vector")
-  })
-})
-
-test_that("addSuperTrend rejects col with empty-string element", {
-  skip_on_cran()
-  with_chart({
     expect_error(addSuperTrend(col = c("", "red")),
                  "col must be a length-2 character vector")
     expect_error(addSuperTrend(col = c("blue", "")),
