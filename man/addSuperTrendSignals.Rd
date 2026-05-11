@@ -34,8 +34,9 @@ down-triangle).}
 used to pad markers off the candle so the triangle never overlaps
 the wick. Defaults to 0.015 (1.5\%).}
 
-\item{on}{Chart panel to draw on. \code{1} = price panel (the only
-sensible choice for SuperTrend signals).}
+\item{on}{Chart panel to draw on. Must be \code{1} (the price
+panel); markers are positioned relative to High / Low and would
+draw off-screen on any other panel.}
 }
 \value{
 Invisibly \code{NULL}; called for the side effect of drawing

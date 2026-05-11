@@ -15,6 +15,15 @@
   the SuperTrend object once instead of twice. No user-visible change.
 * `?SuperTrend` documents the trend seed convention: the first valid
   bar is seeded `trend = +1`, matching Pine Script.
+* `addSuperTrend()` and `addSuperTrendSignals()` now reject any `on`
+  value other than `1`. Previously, values like `on = 2` were accepted
+  by the validator but produced an off-screen overlay because
+  SuperTrend values live on the price scale. The error message is
+  explicit, and the docs now state the constraint.
+* `?addSuperTrend` documents that single-bar trend segments render no
+  line (only the signal triangle), since `type = "l"` draws nothing
+  for an isolated non-NA point. Affects rare configurations on noisy
+  intraday series with small multipliers.
 
 # supertrend 0.3.0
 

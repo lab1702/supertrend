@@ -4,9 +4,11 @@ test_that("addSuperTrendSignals runs without error on the sample dataset", {
 })
 
 test_that("addSuperTrendSignals errors when no chart is active", {
-  if (!is.null(dev.list())) {
-    for (d in dev.list()) dev.off()
-  }
+  # Open a fresh hidden device and clear quantmod's stored chob list so
+  # get.current.chob() throws. Don't clobber any of the user's open
+  # devices. Subsequent tests reseed via with_chart() -> chartSeries().
+  pdf(file = NULL); on.exit(dev.off(), add = TRUE)
+  utils::getFromNamespace("release.chob", "quantmod")()
   expect_error(addSuperTrendSignals())
 })
 
@@ -59,12 +61,15 @@ test_that("addSuperTrendSignals rejects invalid offset", {
   })
 })
 
-test_that("addSuperTrendSignals rejects invalid on", {
+test_that("addSuperTrendSignals rejects any on other than 1", {
   skip_on_cran()
   with_chart({
-    expect_error(addSuperTrendSignals(on = 0),    "on must be a positive integer panel index")
-    expect_error(addSuperTrendSignals(on = -1),   "on must be a positive integer panel index")
-    expect_error(addSuperTrendSignals(on = 1.5),  "on must be a positive integer panel index")
-    expect_error(addSuperTrendSignals(on = "1"),  "on must be a positive integer panel index")
+    expect_error(addSuperTrendSignals(on = 0),    "on must be 1")
+    expect_error(addSuperTrendSignals(on = -1),   "on must be 1")
+    expect_error(addSuperTrendSignals(on = 1.5),  "on must be 1")
+    expect_error(addSuperTrendSignals(on = "1"),  "on must be 1")
+    expect_error(addSuperTrendSignals(on = 2),    "on must be 1")
+    expect_error(addSuperTrendSignals(on = NA),   "on must be 1")
+    expect_error(addSuperTrendSignals(on = NULL), "on must be 1")
   })
 })

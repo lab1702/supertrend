@@ -19,8 +19,9 @@
 #' @param offset Positive numeric. Fraction of the data price range
 #'   used to pad markers off the candle so the triangle never overlaps
 #'   the wick. Defaults to 0.015 (1.5\%).
-#' @param on Chart panel to draw on. \code{1} = price panel (the only
-#'   sensible choice for SuperTrend signals).
+#' @param on Chart panel to draw on. Must be \code{1} (the price
+#'   panel); markers are positioned relative to High / Low and would
+#'   draw off-screen on any other panel.
 #'
 #' @return Invisibly \code{NULL}; called for the side effect of drawing
 #'   two overlay layers on the active chart.
@@ -47,7 +48,7 @@ addSuperTrendSignals <- function(n = 10, multiplier = 3,
   }
   .check_pos_num(cex, "cex")
   .check_pos_num(offset, "offset")
-  .check_pos_int(on, "on")
+  .check_price_panel(on)
 
   get_chob <- utils::getFromNamespace("get.current.chob", "quantmod")
   lchob <- get_chob()

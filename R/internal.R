@@ -15,10 +15,13 @@
   }
 }
 
-.check_pos_int <- function(x, what) {
-  if (!is.numeric(x) || length(x) != 1L || is.na(x) || !is.finite(x) ||
-      x != as.integer(x) || x < 1) {
-    stop(sprintf("%s must be a positive integer panel index", what))
+.check_price_panel <- function(x) {
+  # SuperTrend values live on the price scale, so the overlay only makes
+  # sense on the main price panel. Anything else would draw off-screen.
+  # Guard `x == 1L` with type/length checks because `"1" == 1L` is TRUE
+  # under R's automatic coercion.
+  if (!is.numeric(x) || length(x) != 1L || !isTRUE(x == 1L)) {
+    stop("on must be 1 (the price panel; non-price panels are not supported)")
   }
 }
 

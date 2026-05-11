@@ -25,8 +25,9 @@ green / red.}
 
 \item{lwd}{Line width.}
 
-\item{on}{Chart panel to draw on. \code{1} = price panel (the
-default and the only sensible choice for SuperTrend).}
+\item{on}{Chart panel to draw on. Must be \code{1} (the price
+panel); SuperTrend values live on the price scale and would draw
+off-screen on any other panel.}
 
 \item{signals}{Logical. If \code{TRUE} (default), draw buy/sell
 triangles via \code{\link{addSuperTrendSignals}} using \code{col}
@@ -48,6 +49,14 @@ The line is drawn in two colors: \code{col[1]} on bars where
 \code{trend == -1} (downtrend). The two segments meet but do not
 connect across trend-flip bars (each segment lives on a different
 band), producing the canonical SuperTrend visual break.
+
+Single-bar trend segments (a flip immediately followed by another
+flip) render no line, because each segment is then a single non-NA
+point flanked by NAs and \code{type = "l"} draws nothing. The signal
+triangle is still drawn at the flip, so the trend change remains
+visible. This is rare with the default \code{n = 10},
+\code{multiplier = 3} on daily bars but can occur on noisy intraday
+series with smaller multipliers.
 
 By default, buy/sell signal triangles are also drawn at every trend
 flip (\code{signals = TRUE}), using \code{col} for the marker

@@ -14,10 +14,11 @@ test_that("chartSuperTrend handles an all-uptrend series (down layer all NA)", {
 })
 
 test_that("addSuperTrend errors when no chart is active", {
-  # No active chart -> quantmod's addTA errors; we want some error.
-  if (!is.null(dev.list())) {
-    for (d in dev.list()) dev.off()
-  }
+  # Open a fresh hidden device and clear quantmod's stored chob list so
+  # get.current.chob() throws. Don't clobber any of the user's open
+  # devices. Subsequent tests reseed via with_chart() -> chartSeries().
+  pdf(file = NULL); on.exit(dev.off(), add = TRUE)
+  utils::getFromNamespace("release.chob", "quantmod")()
   expect_error(addSuperTrend())
 })
 
@@ -63,13 +64,17 @@ test_that("addSuperTrend rejects invalid lwd", {
   })
 })
 
-test_that("addSuperTrend rejects invalid on", {
+test_that("addSuperTrend rejects any on other than 1", {
   skip_on_cran()
   with_chart({
-    expect_error(addSuperTrend(on = 0),    "on must be a positive integer panel index")
-    expect_error(addSuperTrend(on = -1),   "on must be a positive integer panel index")
-    expect_error(addSuperTrend(on = 1.5),  "on must be a positive integer panel index")
-    expect_error(addSuperTrend(on = "1"),  "on must be a positive integer panel index")
+    expect_error(addSuperTrend(on = 0),    "on must be 1")
+    expect_error(addSuperTrend(on = -1),   "on must be 1")
+    expect_error(addSuperTrend(on = 1.5),  "on must be 1")
+    expect_error(addSuperTrend(on = "1"),  "on must be 1")
+    # Previously silently accepted but rendered off-screen:
+    expect_error(addSuperTrend(on = 2),    "on must be 1")
+    expect_error(addSuperTrend(on = NA),   "on must be 1")
+    expect_error(addSuperTrend(on = NULL), "on must be 1")
   })
 })
 
@@ -107,4 +112,13 @@ test_that("chartSuperTrend signals = FALSE is accepted and runs", {
   with_chart(
     expect_no_error(chartSuperTrend(.spy_sample(), signals = FALSE))
   )
+})
+
+test_that("chartSuperTrend renders with each atr_method", {
+  skip_on_cran()
+  for (m in c("wilder", "sma", "ema")) {
+    with_chart(
+      expect_no_error(chartSuperTrend(.spy_sample(), atr_method = m))
+    )
+  }
 })

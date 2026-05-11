@@ -11,6 +11,14 @@
 #' connect across trend-flip bars (each segment lives on a different
 #' band), producing the canonical SuperTrend visual break.
 #'
+#' Single-bar trend segments (a flip immediately followed by another
+#' flip) render no line, because each segment is then a single non-NA
+#' point flanked by NAs and \code{type = "l"} draws nothing. The signal
+#' triangle is still drawn at the flip, so the trend change remains
+#' visible. This is rare with the default \code{n = 10},
+#' \code{multiplier = 3} on daily bars but can occur on noisy intraday
+#' series with smaller multipliers.
+#'
 #' By default, buy/sell signal triangles are also drawn at every trend
 #' flip (\code{signals = TRUE}), using \code{col} for the marker
 #' colors. Pass \code{signals = FALSE} to suppress them, or call
@@ -24,8 +32,9 @@
 #'   downtrend bars (\code{trend == -1}). Defaults to TradingView's
 #'   green / red.
 #' @param lwd Line width.
-#' @param on Chart panel to draw on. \code{1} = price panel (the
-#'   default and the only sensible choice for SuperTrend).
+#' @param on Chart panel to draw on. Must be \code{1} (the price
+#'   panel); SuperTrend values live on the price scale and would draw
+#'   off-screen on any other panel.
 #' @param signals Logical. If \code{TRUE} (default), draw buy/sell
 #'   triangles via \code{\link{addSuperTrendSignals}} using \code{col}
 #'   for marker colors.
@@ -49,7 +58,7 @@ addSuperTrend <- function(n = 10, multiplier = 3,
   atr_method <- match.arg(atr_method)
   .check_col2(col, "c(uptrend, downtrend)")
   .check_pos_num(lwd, "lwd")
-  .check_pos_int(on, "on")
+  .check_price_panel(on)
   if (!(isTRUE(signals) || isFALSE(signals))) {
     stop("signals must be a single TRUE or FALSE")
   }
