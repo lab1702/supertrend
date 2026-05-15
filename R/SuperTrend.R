@@ -50,7 +50,7 @@ SuperTrend <- function(HLC, n = 10, multiplier = 3,
     stop("n must be a positive integer")
   }
   if (!is.numeric(multiplier) || length(multiplier) != 1L ||
-      is.na(multiplier) || multiplier <= 0) {
+      is.na(multiplier) || !is.finite(multiplier) || multiplier <= 0) {
     stop("multiplier must be positive")
   }
   if (nrow(HLC) <= n) {

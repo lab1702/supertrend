@@ -106,6 +106,7 @@ test_that("SuperTrend rejects non-positive multiplier", {
   hlc <- make_mixed_hlc()
   expect_error(SuperTrend(hlc, multiplier = 0),  "multiplier must be positive")
   expect_error(SuperTrend(hlc, multiplier = -1), "multiplier must be positive")
+  expect_error(SuperTrend(hlc, multiplier = Inf), "multiplier must be positive")
 })
 
 test_that("SuperTrend rejects unknown atr_method via match.arg", {
